@@ -1,0 +1,19 @@
+
+hsm_subject
+id,name,slug,created_by,updated by
+
+hsm_education_level
+id,name (+2 SCIENCE, SCHOOL ONE), slug,created_by,updated by
+
+hsm_classroom
+id, name, slug ,education_level_id, subject_id, assinged_teacher_id (user_id),created_by,updated_by
+
+
+hsm_assigments
+id, name, content, classroom_id, due_date, created_by, updated_by
+
+hsm_study_content
+id, name, type, size, location,details,created_by,updated_by
+
+hsm_classroom_students
+classroom_id, user_id

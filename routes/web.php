@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+use App\Models\User;
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Auth::routes();
+
+Route::group(['middleware' => ['auth', 'role:administrator']], function () {
+    Route::resource('dashboard', 'DashboardController');
+    Route::resource('subject','SubjectController');
+    Route::resource('education_level','EducationLevelController');    
+    
+    // Route::get('classroom/view/{id}','ClassroomController@view')->name('view');    
+   
+    Route::post('classroom/{classroom_id}/study_material/store','StudyMaterialController@store');   
+    Route::resource('classroom/{classroom_id}/study_material','StudyMaterialController');
+    //Route::get('classroom/{classroom_id}/study_material/create','StudyMaterialController@create')->name('sm-create');    
+    //Route::post('classroom/study_material/store','StudyMaterialController@store')->name('sm-store');    
+    
+    Route::resource('classroom','ClassroomController');
+
+});
