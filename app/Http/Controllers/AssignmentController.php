@@ -14,7 +14,7 @@ class AssignmentController extends Controller
      */
     public function index()
     {
-        //
+        return view('interface/assignment/index');
     }
 
     /**

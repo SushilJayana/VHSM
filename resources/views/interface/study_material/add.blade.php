@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="ajax-loader">
+    <img src="{{asset('/img/ajax-loader.gif')}}" class="img-responsive" />
+</div>
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="card w-100">
@@ -37,7 +41,7 @@
                         <label for="details" class="col-sm-2 col-form-label">Description</label>
                         <div class="col-sm-10">
                             <textarea name="details" id="details" cols="30" rows="10" class="form-control"
-                            style="overflow:auto;resize:none"></textarea>                            
+                                style="overflow:auto;resize:none"></textarea>
                         </div>
                     </div>
 
@@ -63,7 +67,7 @@ $(document).ready(function() {
         e.preventDefault();
 
         let formData = new FormData(this);
-        
+
         $.ajax({
             type: "POST",
             url: "{{url('classroom/'.$classroom_id.'/study_material/store')}}",
@@ -74,7 +78,7 @@ $(document).ready(function() {
                 $('.ajax-loader').css("visibility", "visible");
             },
             success: function(response) {
-                
+                alert(response);
             },
             complete: function() {
                 $('.ajax-loader').css("visibility", "hidden");

@@ -11,6 +11,25 @@ class FileManagerController extends Controller
     protected $allowedExts = array("jpg", "jpeg", "gif", "png", "mp3", "mp4", "wma");
 
 
+    public function upload($request,$folder=null)
+    {
+      try{
+        $file=$request->file('file');
+
+        if(!$file) return false;
+
+        $extension =$file->getClientOriginalExtension();
+        $filename = time().'.'.$extension;
+        $path = (!\is_null($folder))?"storage/".$folder : "storage/";
+        $request->file->move($path,$filename);
+        $size = $file->getSize();
+        return array("extension"=>$extension,"size"=>$size,"path"=>$path);
+
+      }catch(Exception $exception){
+        return false;
+      }    
+    }
+    
     public function uploadFile($files){
 
         $extension = pathinfo($files['file']['name'], PATHINFO_EXTENSION);

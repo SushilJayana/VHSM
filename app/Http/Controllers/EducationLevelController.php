@@ -16,7 +16,7 @@ class EducationLevelController extends Controller
     public function index()
     {
         $educationLevels = EducationLevel::latest()->paginate(2);  
-        return view('interface/education_level/index',["educationLevels"=>$educationLevels]);
+        return view('interface/education_level/index',compact('educationLevels'));
     }
 
     /**

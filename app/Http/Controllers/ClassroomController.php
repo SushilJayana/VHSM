@@ -51,7 +51,7 @@ class ClassroomController extends Controller
         $educationLevels = EducationLevel::all();
         $subjects = Subject::all();
         $users = User::all();
-        return view('interface/classroom/add',["educationLevels"=>$educationLevels,"subjects"=>$subjects,"users"=>$users]);
+        return view('interface/classroom/add',compact('educationLevels','subjects','users'));
     }
 
     /**
@@ -101,7 +101,10 @@ class ClassroomController extends Controller
      */
     public function edit(Classroom $classroom)
     {
-        //
+        $educationLevels = EducationLevel::all();
+        $subjects = Subject::all();
+        $users = User::all();
+        return view('interface/classroom/edit',compact('educationLevels','classroom','subjects','users'));
     }
 
     /**
@@ -113,7 +116,23 @@ class ClassroomController extends Controller
      */
     public function update(Request $request, Classroom $classroom)
     {
-        //
+        try{
+            $request->validate([
+                'name' => 'required',
+                'slug' => 'required','unique:hsm_classrooms',
+                'education_level_id'=>'required', 
+                'subject_id'=>'required', 
+                'assigned_teacher_id'=>'required'
+            ]);
+            $request['updated_by'] = Auth::user()->id;
+            $classroom->update($request->all());
+        
+            return redirect()->route('classroom.index')
+                            ->with('success','Classroom updated successfully');
+
+        }catch(Exception $exception){
+            return response()->json($exception->getMessage());
+        }  
     }
 
     /**
@@ -124,6 +143,9 @@ class ClassroomController extends Controller
      */
     public function destroy(Classroom $classroom)
     {
-        //
+        $classroom->delete();
+  
+        return redirect()->route('classroom.index')
+                        ->with('success','Classroom deleted successfully');
     }
 }

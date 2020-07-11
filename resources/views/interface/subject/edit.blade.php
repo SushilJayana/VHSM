@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="card w-100">
-            <h5 class="card-header">Edit subject</h5>
+            <h5 class="card-header">Update subject</h5>
             <div class="card-body">
                 @if ($errors->any())
                 <div class="alert alert-danger">
@@ -16,7 +16,7 @@
                     </ul>
                 </div>
                 @endif
-                <form action="{{route('subject.update',$subject->id)}}" method="post" id="edit-subject-form">
+                <form action="{{route('subject.update',$subject->id)}}" method="post" id="update-subject-form">
                     @csrf
                     @method('PUT')
                     <div class="form-group row">
@@ -34,7 +34,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-12">
-                            <button type="submit" class="btn btn-primary pull-right" id='btn-edit'>Edit</button>
+                            <button type="submit" class="btn btn-primary pull-right" id='btn-update'>Update</button>
                             <a class="btn btn-light pull-right" href="{{ route('subject.index') }}"
                                 style="margin-right:10px">Cancel</a>
                         </div>

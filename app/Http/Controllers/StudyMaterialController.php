@@ -19,7 +19,7 @@ class StudyMaterialController extends FileManagerController
         ->leftJoin('hsm_classrooms', 'hsm_study_materials.classroom_id', '=', 'hsm_classrooms.id')
         ->select('hsm_study_materials.*','hsm_classrooms.name as classroom')->paginate(2);
 
-        return view('interface/study_material/index',['studyMaterials'=>$studyMaterials,'classroom_id'=>$classroom_id]);
+        return view('interface/study_material/index',compact('studyMaterials','classroom_id'));
     }
 
     /**
@@ -29,7 +29,7 @@ class StudyMaterialController extends FileManagerController
      */
     public function create($classroom_id)
     {
-        return view('interface/study_material/add', ['classroom_id'=>$classroom_id]);
+        return view('interface/study_material/add',compact('classroom_id'));
     }
 
     /**
@@ -41,13 +41,19 @@ class StudyMaterialController extends FileManagerController
     public function store(Request $request,$classroom_id)
     {
         try{
-            $this->uploadFile($_FILES);
-
+            $response = $this->upload($request,"study");
+            dd($response["size"]);
+            return;
             $request->validate([
                 'name' => 'required',
                 'classroom_id' => 'required',
-                'file'=>'required',
+                'file'=>'required'
             ]);
+            
+            $isUploaded = $this->upload($request);
+
+            $request['location']= $isUploaded;
+            $request['size']="";
             $request['created_by'] = Auth::user()->id;
     
             StudyMaterial::create($request->all());

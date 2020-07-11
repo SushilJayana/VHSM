@@ -29,9 +29,8 @@ Route::group(['middleware' => ['auth', 'role:administrator']], function () {
    
     Route::post('classroom/{classroom_id}/study_material/store','StudyMaterialController@store');   
     Route::resource('classroom/{classroom_id}/study_material','StudyMaterialController');
-    //Route::get('classroom/{classroom_id}/study_material/create','StudyMaterialController@create')->name('sm-create');    
-    //Route::post('classroom/study_material/store','StudyMaterialController@store')->name('sm-store');    
-    
+    Route::resource('classroom/{classroom_id}/assignment','AssignmentController');
+
     Route::resource('classroom','ClassroomController');
 
 });
