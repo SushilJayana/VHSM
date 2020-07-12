@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classroom;
 use Illuminate\Http\Request;
 use App\Models\StudyMaterial;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Shared\FileManagerController;
 
 class StudyMaterialController extends FileManagerController
@@ -41,28 +43,27 @@ class StudyMaterialController extends FileManagerController
     public function store(Request $request,$classroom_id)
     {
         try{
-            $response = $this->upload($request,"study");
-            dd($response["size"]);
-            return;
             $request->validate([
                 'name' => 'required',
                 'classroom_id' => 'required',
                 'file'=>'required'
             ]);
-            
-            $isUploaded = $this->upload($request);
 
-            $request['location']= $isUploaded;
-            $request['size']="";
+            $classroom = Classroom::find($request["classroom_id"],"name");
+           
+            $isUploaded =  $this->upload($request,$classroom->name);
+
+            $request['type']= $isUploaded['extension'];
+            $request['size']=$isUploaded['size'];
+            $request['location']=$isUploaded['location'];
             $request['created_by'] = Auth::user()->id;
     
-            StudyMaterial::create($request->all());
-       
-            return redirect()->route('interface/study_material/index')
-                            ->with('success','Material created successfully.');
+            StudyMaterial::create($request->all());       
+            
+            return response()->json(["status"=>"success","message"=>"Study material added successfully."]);
                             
-        }catch(Exception $exception){
-            return response()->json($exception->getMessage());
+        }catch(Exception $exception){                        
+            return response()->json(["status"=>"error","message"=>$exception->getMessage()]);
         }
     }
 

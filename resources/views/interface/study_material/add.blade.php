@@ -1,13 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="ajax-loader">
-    <img src="{{asset('/img/ajax-loader.gif')}}" class="img-responsive" />
-</div>
-
 <div class="container">
     <div class="row justify-content-center">
         <div class="card w-100">
+            <div class="ajax-loader">
+                <img src="{{asset('/img/ajax-loader.gif')}}" class="img-responsive" />
+            </div>
             <h5 class="card-header">Add study materials</h5>
             <div class="card-body">
                 @if ($errors->any())
@@ -22,7 +21,7 @@
                 @endif
                 <form method="post" id="add-study-material-form" enctype="multipart/form-data">
                     @csrf
-                    <!-- <input type="text" name="classroom_id" value={{$classroom_id}}> -->
+                    <input type="hidden" name="classroom_id" value={{$classroom_id}}>
                     <div class="form-group row">
                         <label for="name" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
@@ -65,7 +64,6 @@ $('#menu-classroom').addClass('menu-active');
 $(document).ready(function() {
     $('#add-study-material-form').submit(function(e) {
         e.preventDefault();
-
         let formData = new FormData(this);
 
         $.ajax({
@@ -78,7 +76,11 @@ $(document).ready(function() {
                 $('.ajax-loader').css("visibility", "visible");
             },
             success: function(response) {
-                alert(response);
+                if (response.status === "error") {
+                    alert(response.message);
+                    return false;
+                }
+                window.location.href = "{{ url('classroom/'.$classroom_id.'/study_material') }}";
             },
             complete: function() {
                 $('.ajax-loader').css("visibility", "hidden");

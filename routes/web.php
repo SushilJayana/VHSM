@@ -24,9 +24,7 @@ Route::group(['middleware' => ['auth', 'role:administrator']], function () {
     Route::resource('dashboard', 'DashboardController');
     Route::resource('subject','SubjectController');
     Route::resource('education_level','EducationLevelController');    
-    
-    // Route::get('classroom/view/{id}','ClassroomController@view')->name('view');    
-   
+       
     Route::post('classroom/{classroom_id}/study_material/store','StudyMaterialController@store');   
     Route::resource('classroom/{classroom_id}/study_material','StudyMaterialController');
     Route::resource('classroom/{classroom_id}/assignment','AssignmentController');

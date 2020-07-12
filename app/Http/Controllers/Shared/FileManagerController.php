@@ -15,70 +15,19 @@ class FileManagerController extends Controller
     {
       try{
         $file=$request->file('file');
-
+        
         if(!$file) return false;
 
         $extension =$file->getClientOriginalExtension();
         $filename = time().'.'.$extension;
-        $path = (!\is_null($folder))?"storage/".$folder : "storage/";
+        $path = (!\is_null($folder))?"storage/".preg_replace("/\s+/", "",$folder) : "storage/";
         $request->file->move($path,$filename);
-        $size = $file->getSize();
-        return array("extension"=>$extension,"size"=>$size,"path"=>$path);
+        //$size = $file->getSize();
+        $size = 111;
+        return array("extension"=>$extension,"size"=>$size,"location"=>$path.'/'.$filename);
 
       }catch(Exception $exception){
         return false;
       }    
-    }
-    
-    public function uploadFile($files){
-
-        $extension = pathinfo($files['file']['name'], PATHINFO_EXTENSION);
-
-        if ((($files["file"]["type"] == "video/mp4")
-        || ($files["file"]["type"] == "audio/mp3")
-        || ($files["file"]["type"] == "audio/wma")
-        || ($files["file"]["type"] == "image/pjpeg")
-        || ($files["file"]["type"] == "image/gif")
-        || ($files["file"]["type"] == "image/jpeg"))
-        
-        // && ($files["file"]["size"] < 20000)
-        && in_array($extension, $allowedExts))
-        
-          {
-          if ($files["file"]["error"] > 0)
-            {
-              echo  $files["file"]["error"];
-              return;
-            }
-          else
-            {
-        
-            $filename = preg_replace("/\s+/", "", $_POST['subject']."_".date("Y_m_d_H_m_s")).".".$extension;
-        
-            if (file_exists("../../uploads/" . $filename))
-              {
-              echo $filename . " already exists. ";
-              return;
-              }
-            else
-              {
-              move_uploaded_file($files["file"]["tmp_name"],"../../uploads/" .$filename);
-        
-              $_POST["location"] = "/uploads/" . $filename;
-              $_POST["size"] = ($files["file"]["size"] / 1024) ;
-        
-              //db save
-               $repo= new Database\Repo();       
-               $repo->save();
-        
-              echo "success";
-              }
-            }
-          }
-        else
-          {
-          echo "Invalid file";
-          }
-        
-    }
+    }    
 }
